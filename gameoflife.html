@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      attribute  vec4 vPosition;
+      attribute  vec4 vColor;
+      varying vec4 fColor;
+      uniform mat4 projection;
+      uniform mat4 modelview;
+
+      void main() {
+        fColor = vColor;
+        gl_Position = projection * modelview * vPosition;
+      }
+    </script>
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      precision mediump float;
+      varying vec4 fColor;
+
+      void main() {
+        gl_FragColor = fColor;
+      }
+    </script>
+    <script type="text/javascript" src="../Common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../Common/initShaders.js"></script>
+    <script type="text/javascript" src="../Common/MV.js"></script>
+    <script type="text/javascript" src="gameoflife.js"></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class='container'>
+      <div class='vertical'>
+        <div class='label'>
+          <h5>Game of life 3D</h5>
+          <p class='text'>Game of life útfærður í þrívídd. Verkefni í Tölvugrafík við Háskóla Íslands</p>
+        </div>
+      </div>
+      <div>
+        <canvas id="gl-canvas" width="700" height="700">
+          Oops ... your browser doesn't support the HTML5 canvas element
+        </canvas>
+      </div>
+      <div class='vertical'>
+        <div class='label'>
+          <h5 class='headerleft'>Controls</h5>
+          <p class='control'>I:Endursetja likan</p>
+          <p class='control'>Upp/niður/scroll: Zoom</p>
+          <p class='control'>Hægri/vinstri: Stjórna snúningshraða</p>
+          <p class='control'>Lífslíkur:</p>
+          <div>20%<input id="slider" type="range" min="20" max="90" step="10" value="0" />90%</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
