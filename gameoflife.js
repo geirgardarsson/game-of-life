@@ -171,14 +171,6 @@ window.addEventListener("keydown", function(e) {
   }
 });
 
-// Event listener for mousewheel
-window.addEventListener("mousewheel", function(e) {
-  if(e.wheelDelta > 0) {
-    zDist += 0.05;
-  } else {
-    zDist -= 0.05;
-  }
-});
 
 render();
 
