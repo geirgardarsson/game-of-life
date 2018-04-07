@@ -30,25 +30,32 @@
   </head>
   <body>
     <div class='container'>
-      <div class='vertical'>
-        <div class='label'>
-          <h5>Game of life 3D</h5>
-          <p class='text'>Game of life útfærður í þrívídd. Verkefni í Tölvugrafík við Háskóla Íslands</p>
+      <canvas id="gl-canvas" width="700" height="700">
+        Oops ... your browser doesn't support the HTML5 canvas element
+      </canvas>
+      <div class='text'>
+        <div class="text-item">
+          <h4>Game of life 3D</h4>
+          <div class='text'>Game of life útfærður í þrívídd. Verkefni í Tölvugrafík við Háskóla Íslands</div>
+          <div>Kubbarnir lifa best við 30-40%</div>
+          <div id="life"></div>
+          <div id="speedvalue"></div>
         </div>
-      </div>
-      <div>
-        <canvas id="gl-canvas" width="700" height="700">
-          Oops ... your browser doesn't support the HTML5 canvas element
-        </canvas>
-      </div>
-      <div class='vertical'>
-        <div class='label'>
-          <h5 class='headerleft'>Controls</h5>
-          <p class='control'>I:Endursetja likan</p>
-          <p class='control'>Upp/niður/scroll: Zoom</p>
-          <p class='control'>Hægri/vinstri: Stjórna snúningshraða</p>
-          <p class='control'>Lífslíkur:</p>
-          <div>20%<input id="slider" type="range" min="20" max="90" step="10" value="0" />90%</div>
+        <div class="text-item">
+          <h4 class='headerleft'>Controls</h4>
+          <ul>
+            <li class='control'>R:Endursetja likan</li>
+            <li class='control'>Upp/niður/scroll: Zoom</li>
+            <li class='control'>Hægri/vinstri: Stjórna snúningshraða</li>
+            <li class='control'>
+              Lífslíkur í upphafi:
+              <div>0%<input id="slider" type="range" min="0" max="100" step="10" value="0" />100%</div>
+            </li>
+            <li>
+              Hraði
+              <div>10<input id="speed" type="range" min="10" max="100" step="10" value="0" />1000</div>              
+            </li>
+          </ul>
         </div>
       </div>
     </div>

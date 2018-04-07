@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////
-//    Tölvugrafík 2017 - Geir Garðarsson
+//    Háskóli Íslands 2017 - Tölvugrafík - Geir Garðarsson
 //    Game of life, febrúar 2017
 /////////////////////////////////////////////////////////////////
 var gl;
@@ -17,7 +17,7 @@ var chance = 0.3;
 var rotYear = 0.0;
 
 var time = 0;
-var speed = 100;
+var timescale = 100;
 var spin = 0.1;
 
 var dna = [];
@@ -74,6 +74,9 @@ var indices = [
 ];
 
 window.onload = function init() {
+
+  document.getElementById("life").innerHTML = 'Lífslíkur ' + (chance * 100) + ' %';
+  document.getElementById("speedvalue").innerHTML = 'Hraði ' + timescale;
 
   initializeDNA();
 
@@ -145,12 +148,18 @@ window.onload = function init() {
 
   document.getElementById("slider").onchange = function(event) {
     chance = parseInt(event.target.value)/100;
+    document.getElementById("life").innerHTML = 'Lífslíkur ' + (chance * 100) + ' % - Ýtið á R til að byrja aftur';
+  }
+
+  this.document.getElementById("speed").onchange = (event) => {
+    timescale = parseInt(event.target.value);
+    document.getElementById("speedvalue").innerHTML = 'Hraði ' + timescale + ' - Minna gildi = hraðar';  
   }
 
 // Event listener for keyboard
 window.addEventListener("keydown", function(e) {
   switch(e.keyCode) {
-    case 73: //i
+    case 82: //r
       initializeDNA();
       break;
     case 37:
@@ -179,17 +188,14 @@ render();
 function render() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    growstat = (time % 100) / 100;
+    growstat = (time % timescale) / timescale;
     shrinkstat = 1 - growstat;
 
     if (shrinkstat >= 1) { shrinkstat = 0; }
     if (growstat <= 0) { growstat = 1; }
 
-    var mvstack = [];
-
     rotYear += spin;
 
-    // sta�setja �horfanda og me�h�ndla m�sarhreyfingu
     var mv = lookAt( vec3(0.0, 0.0, zDist), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
     mv = mult( mv, scalem( 0.1, 0.1, 0.1 ) );
     mv = mult( mv, rotate( parseFloat(spinX), [1, 0, 0] ) );
@@ -207,27 +213,13 @@ function render() {
         var z = -9;
         for (var k = 1; k < 11; k++) {
           if (draw[i][j][k] === 'A') {
-            mvstack.push(mv);
-            mv = mult(mv, translate(x, y, z));
-            gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
-            gl.drawElements( gl.TRIANGLES, numVertices, gl.UNSIGNED_BYTE, 0 );
-            mv = mvstack.pop();
+            drawCube(mv, x, y, z, 1);
           }
           else if (draw[i][j][k] === 'G') {
-            mvstack.push(mv);
-            mv = mult(mv, translate(x, y, z));
-            mv = mult(mv, scalem(growstat, growstat, growstat));
-            gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
-            gl.drawElements( gl.TRIANGLES, numVertices, gl.UNSIGNED_BYTE, 0 );
-            mv = mvstack.pop();
+            drawCube(mv, x, y, z, growstat);
           }
           else if (draw[i][j][k] === 'T') {
-            mvstack.push(mv);
-            mv = mult(mv, translate(x, y, z));
-            mv = mult(mv, scalem(shrinkstat, shrinkstat, shrinkstat));
-            gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
-            gl.drawElements( gl.TRIANGLES, numVertices, gl.UNSIGNED_BYTE, 0 );
-            mv = mvstack.pop();
+            drawCube(mv, x, y, z, shrinkstat);
           }
           z += 2;
           n++;
@@ -237,7 +229,7 @@ function render() {
       y += 2;
     }
 
-    if (time % speed === 0) {
+    if (time % timescale === 0) {
       if (!swap) {
         stabilize(dna);
         stabilize(rna);
@@ -292,32 +284,18 @@ function evolve (current, next) {
 
 function count(current, i, j, k) {
   var n = 0;
-  if (current[i-1][j-1][k-1] === 'A') {n++}
-  if (current[i-1][j-1][k] === 'A') {n++}
-  if (current[i-1][j-1][k+1] === 'A') {n++}
-  if (current[i-1][j][k-1] === 'A') {n++}
-  if (current[i-1][j][k] === 'A') {n++}
-  if (current[i-1][j][k+1] === 'A') {n++}
-  if (current[i-1][j+1][k-1] === 'A') {n++}
-  if (current[i-1][j+1][k] === 'A') {n++}
-  if (current[i-1][j+1][k+1] === 'A') {n++}
-  if (current[i][j-1][k-1] === 'A') {n++}
-  if (current[i][j-1][k] === 'A') {n++}
-  if (current[i][j-1][k+1] === 'A') {n++}
-  if (current[i][j][k-1] === 'A') {n++}
-  if (current[i][j][k+1] === 'A') {n++}
-  if (current[i][j+1][k-1] === 'A') {n++}
-  if (current[i][j+1][k] === 'A') {n++}
-  if (current[i][j+1][k+1] === 'A') {n++}
-  if (current[i+1][j-1][k-1] === 'A') {n++}
-  if (current[i+1][j-1][k] === 'A') {n++}
-  if (current[i+1][j-1][k+1] === 'A') {n++}
-  if (current[i+1][j][k-1] === 'A') {n++}
-  if (current[i+1][j][k] === 'A') {n++}
-  if (current[i+1][j][k+1] === 'A') {n++}
-  if (current[i+1][j+1][k-1] === 'A') {n++}
-  if (current[i+1][j+1][k] === 'A') {n++}
-  if (current[i+1][j+1][k+1] === 'A') {n++}
+
+  for (var a = i-1; a <= i+1; a++) {
+    for (var b = j-1; b <= j+1; b++) {
+      for (var c = k-1; c <= k+1; c++) {
+        if (current[a][b][c] === 'A') {
+          n++;
+        }
+      }
+    }
+  }
+
+  if (current[i][j][k] === 'A') { n-- }
 
   return n;
 }
@@ -370,13 +348,9 @@ function stabilize (string) {
   }
 }
 
-function drawCube(mv, x, y, z, scale) {
-  var mvstack = []
-
-  mvstack.push(mv);
+function drawCube(mv, x, y, z, s) {
   mv = mult(mv, translate(x, y, z));
-  mv = mult(mv, scalem(growstat, growstat, growstat));
+  mv = mult(mv, scalem(s, s, s));
   gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
   gl.drawElements( gl.TRIANGLES, numVertices, gl.UNSIGNED_BYTE, 0 );
-  mv = mvstack.pop();
 }
