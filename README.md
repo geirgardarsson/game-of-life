@@ -10,4 +10,4 @@ and made into 3D!
 
 ![](example.gif)
 
-**The program is hosted [here](https://notendur.hi.is/~geg42/T%C3%B6lvugraf%C3%ADk/Gameoflife/)** (lot smoother than the gif!)
+## The program is hosted [here](https://notendur.hi.is/~geg42/T%C3%B6lvugraf%C3%ADk/Gameoflife/) (lot smoother than the gif!)
